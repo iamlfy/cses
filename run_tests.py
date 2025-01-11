@@ -76,12 +76,21 @@ def prepare_tests():
     print("错误：未找到测试文件。请确保存在tests.zip或tests目录。")
     return False
 
+def get_latest_cpp_file():
+    """获取当前目录下最新修改的C++文件"""
+    cpp_files = list(Path('.').glob('*.cpp'))
+    if not cpp_files:
+        return None
+    return str(max(cpp_files, key=lambda x: x.stat().st_mtime))
+
 def main():
-    if len(sys.argv) != 2:
-        print("使用方法：python3 run_tests.py <cpp_file>")
+    # 获取最新的cpp文件
+    cpp_file = get_latest_cpp_file()
+    if not cpp_file:
+        print("错误：当前目录下未找到C++文件")
         sys.exit(1)
     
-    cpp_file = sys.argv[1]
+    print(f"正在测试文件：{cpp_file}")
     
     # 准备测试文件
     if not prepare_tests():
